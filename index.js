@@ -12,17 +12,11 @@ const { start } = require('repl');
 
 function pathResolver (foundPath) {
 
-
   let newStr = '';
   let starting = false;
   let fixedDir;
 
-  console.log('WHATS THIS?!!?', foundPath)
-  console.log(foundPath[foundPath.length-2])
-
   if(foundPath[foundPath.length-2] === 'e'){
-    console.log('kafka.service one ')
-
     for(let i = foundPath.length; i >=0; i--){
     
       let currentChar = foundPath[i];
@@ -37,13 +31,10 @@ function pathResolver (foundPath) {
       newStr += currentChar;
     }
     fixedDir = newStr.split('').reverse().join('');
-    console.log("fixed dir before being returned ", fixedDir);
     return fixedDir;
 
   } else {
     fixedDir;
-    console.log('kafka.server one ', foundPath)
-    //  /c/Users/ching/Desktop/systemd/system/kafka.server
 
     for(let i = foundPath.length; i >=0; i--){
     
@@ -116,9 +107,6 @@ try {
 
 
   // CONFIGURE SYSTEMD
-  // CHECK/FIND if systemd/system/kafka.service exists
-
-  // const checkSystemDKafka = cp.execSync('find /c/Users/ching/Desktop/systemd/system -type f -iname "kafka.service"')
   const checkSystemDKafka = cp.execSync('find /c/Users/ching/Desktop/systemd/system -type f -iname "kafka.service"')
   const systemDPathString = checkSystemDKafka.toString();
   const resolvedSystemDPath = pathResolver(systemDPathString);
@@ -133,7 +121,6 @@ try {
   console.log('JMX Exporter has been installed and configured. You may now go to localhost:7075 to check metrics');
 
   // If it doesn't work then check for firewalls on that port
-  
 
 } catch (err) {
   console.log("err", err);
