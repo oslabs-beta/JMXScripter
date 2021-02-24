@@ -63,6 +63,18 @@ try {​
    * 
    *  The hardest part will be seeing how from node.js we can either create a new kafka.service file or edit it
    *  or we can copy in the kafka.service file first and then write on it later
+   * 
+   *      echo "whateever words" >> <file name>
+   *      echo "hahaha" >> kafka.service
+   * 
+   *      to edit 
+   *      sed 's/unix/linux/' this.service
+   *      CHECK IF WORKS ON UBUNTU
+   * 
+   *  ALSO DON'T FORGET TO SUDO CHMOD +X KAFKA-SERVER-START.SH, SERVER.PROPERTIES, AND KAFKA.SERVICE
+   * 
+   * 
+   *  IF USER DOESN'T WANT THEIR ORIGINAL CONFIGS EDITED, WILL CREATE NEW FILES WITH DIFF NAMES
    */
 ​
   const JMXInstallerWindows = 'curl --output JMXFILE.jar https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/0.13.0/jmx_prometheus_javaagent-0.13.0.jar'
