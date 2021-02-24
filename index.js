@@ -104,8 +104,6 @@ try {
     `echo "Environment="JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64"" >> kafka.service`
   );
   cp.execSync(`echo "##Add the line below" >> kafka.service`);
-
-  // Path to JMX Agent and yml file
   cp.execSync(
     `echo "Environment="KAFKA_OPTS=-javaagent:${jmxExporterPath}=7075:${kafkaYmlPath}"" >> kafka.service`
   );
@@ -115,6 +113,7 @@ try {
   cp.execSync(`echo "ExecStop=${kafkaServerStopPath}" >> kafka.service`);
   cp.execSync(`echo "Restart=on-abnormal" >> kafka.service`);
 
+  
   // CONFIGURE SYSTEMD
   // CHECK FOR SYSTEMD
   const checkSystemDKafka = cp.execSync('find /etc/systemd/system -type f -iname "kafka.service"')
