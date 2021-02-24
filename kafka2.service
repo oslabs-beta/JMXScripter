@@ -1,8 +1,0 @@
-[Service]
-Type=simple
-Environment="JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64"
-##Add the line below
-Environment="KAFKA_OPTS=-javaagent:/usr/local/kafka-server/libs/jmx_prometheus_javaagent-0.13.0.jar=7075:/usr/local/kafka-server/config/sample_jmx_exporter.yml"
-ExecStart=/usr/local/kafka-server/bin/kafka-server-start.sh /usr/local/kafka-server/config/server.properties
-ExecStop=/usr/local/kafka-server/bin/kafka-server-stop.sh
-Restart=on-abnormal
