@@ -51,36 +51,41 @@ const { start } = require('repl');
     return fixedDir;
   }
 ​
-try {
-  // FIND USERS DESKTOP
-  // NEED TO ADD "SUDO" during testing
-​
+try {​
+  /**
+   * - Need path to kafka-server-start.sh 
+   *  - we get this later
+   *  - 
+   * - Need path to kafka's config/server.properties
+   *  - get this later too for the yml file, but need to attach it to the server.properties file
+   *    so that we can use the file path later for the kafka.service file
+   * 
+   * 
+   *  The hardest part will be seeing how from node.js we can either create a new kafka.service file or edit it
+   *  or we can copy in the kafka.service file first and then write on it later
+   */
 ​
   const JMXInstallerWindows = 'curl --output JMXFILE.jar https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/0.13.0/jmx_prometheus_javaagent-0.13.0.jar'
   const JMXInstallerLinux = 'sudo wget https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/0.13.0/jmx_prometheus_javaagent-0.13.0.jar'
 ​
   // Create directory and download JMX Exporter Agent
   const currentWorkDir = {cwd: '..'};
-  // cp.execSync(`mkdir JMXFOLDER`, currentWorkDir)
-  // currentWorkDir.cwd = '../JMXFOLDER'
+  cp.execSync(`mkdir JMXFOLDER`, currentWorkDir)
+  currentWorkDir.cwd = '../JMXFOLDER'
 ​
   cp.execSync(JMXInstallerWindows, currentWorkDir)
   // console.log('JMX Exporter jar file successful')
-​
-  // Copy JMX jar file onto /kafka-server/libs/ directory
-  // (MAKE THIS DYNAMIC!!!!)
-  // console.log("...searching for directory...")
-  const kafkaServerDir = cp.execSync('find /home/eric/Kafka -type d -iname "kafka_2.13-2.7.0*"');
-  // console.log('is this the right dir?? ', kafkaServerDir.toString());
+
+  // console.log("...searching for kafka directory...")
+  const kafkaServerDir = cp.execSync('find /home -type d -iname "kafka_2.13-2.7.0*"');
   const kafkaServerStr = kafkaServerDir.toString();
   // console.log('path found on Erics computer', kafkaServerStr);
   const returned = pathResolver(kafkaServerStr);
   // console.log('RETURNED?', returned)
 ​
 ​
-  // const kafkaLibsDir = `${returned}/libs/`;
- 
-  // cp.execSync('cp JMXFILE.jar ' + kafkaLibsDir, currentWorkDir);
+  const kafkaLibsDir = `${returned}/libs/`;
+  cp.execSync('cp JMXFILE.jar ' + kafkaLibsDir, currentWorkDir);
   // console.log('exporter successfully copied to /kafka-server/libs/');
 ​
 ​
@@ -88,8 +93,8 @@ try {
   // // Configure Exporter 
   const kafkaConfigDir = `${returned}/config/`
   const kafkaServerStart = `${returned}/bin/`
-​
   cp.execSync(`cp kafka-2_0_0.yml ${kafkaConfigDir}`);
+
   // remove existing kafka-server-start.sh
   cp.execSync(`rm ${kafkaServerStart}kafka-server-start.sh`);
   // copy jmx configured one
@@ -105,10 +110,12 @@ try {
   const systemDPathString = checkSystemDKafka.toString();
   const resolvedSystemDPath = pathResolver(systemDPathString);
 ​
-  // // do that thing u learned before about finding the specific line inside a file with GREP
+  // do that thing u learned before about finding the specific line inside a file with GREP
   cp.execSync(`sudo rm ${resolvedSystemDPath}`);
   console.log('sucessfully removed original kafka.service file.');
   cp.execSync(`sudo cp kafka.service ${resolvedSystemDPath}`);
+
+  // check if daemon reload and restart are both possible from this cwd
   console.log('new kafka.service file copied onto ~/systemd/system/. Beginning daemon-reload');
   cp.execSync('systemctl daemon-reload');
   cp.execSync('systemctl restart kafka');
