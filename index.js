@@ -1,45 +1,6 @@
 const cp = require('child_process');
 const { start } = require('repl');
 
-function pathResolver(foundPath) {
-  let newStr = '';
-  let starting = false;
-  let fixedDir;
-  if (foundPath[foundPath.length - 2] === 't') {
-    for (let i = foundPath.length; i >= 0; i--) {
-      let currentChar = foundPath[i];
-      if (!starting) {
-        if (currentChar === 't') {
-          starting = true;
-          newStr += currentChar;
-          continue;
-        }
-        continue;
-      }
-      newStr += currentChar;
-    }
-    fixedDir = newStr.split('').reverse().join('');
-    return fixedDir;
-  } else {
-    fixedDir;
-
-    //    /Users/shahprose/Desktop/kafka_2.13-2.7.0-test
-    for (let i = foundPath.length; i >= 0; i--) {
-      let currentChar = foundPath[i];
-      if (!starting) {
-        if (currentChar === '0') {
-          starting = true;
-          newStr += currentChar;
-          continue;
-        }
-        continue;
-      }
-      newStr += currentChar;
-    }
-    fixedDir = newStr.split('').reverse().join('');
-  }
-  return fixedDir;
-}
 
 try {
   // INITIAL SETUP
@@ -51,7 +12,7 @@ try {
 
   // Create directory and download JMX Exporter Agent
   const currentWorkDir = { cwd: '..' };
-  cp.execSync(`mkdir JMXFOLDER`, currentWorkDir);
+  // cp.execSync(`mkdir JMXFOLDER`, currentWorkDir);
   currentWorkDir.cwd = '../JMXFOLDER';
   cp.execSync(JMXInstallerWindows, currentWorkDir);
 
@@ -63,7 +24,7 @@ try {
   // const kafkaServerDir = cp.execSync('find /c/Users/ching/Desktop -type d -iname "kafka-server*"');
   const kafkaServerStr = kafkaServerDir.toString();
 
-  const returned = pathResolver(kafkaServerStr);
+  const returned = kafkaServerStr.replace(/\n/g,'');
   console.log('returned from path Resolver: ', returned);
   const kafkaLibsDir = `${returned}/libs/`;
   cp.execSync('cp JMXFILE.jar ' + kafkaLibsDir, currentWorkDir);
@@ -81,7 +42,7 @@ try {
   // Check later to see if this can just be appended
   cp.execSync(`rm ${kafkaServerStart}kafka-server-start.sh`);
   cp.execSync(`cp kafka-server-start.sh ${kafkaServerStart}`);
-  // cp.execSync(`sudo chmod +x kafka-server-start.sh`);
+  cp.execSync(`sudo chmod +x kafka-server-start.sh`);
 
   const serverPropertiesPath = `${kafkaConfigDir}server.properties`;
   const kafkaServerStartPath = `${kafkaServerStart}kafka-server-start.sh`;
@@ -99,13 +60,14 @@ try {
   cp.execSync(`echo "[Service]" > kafka.service`);
   cp.execSync(`echo "Type=simple" >> kafka.service`);
 
+  let quotes = '"';
   // Path to Java
   cp.execSync(
-    `echo "Environment="JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64"" >> kafka.service`
+    `echo 'Environment=${quotes}JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64${quotes}' >> kafka.service`
   );
   cp.execSync(`echo "##Add the line below" >> kafka.service`);
   cp.execSync(
-    `echo "Environment="KAFKA_OPTS=-javaagent:${jmxExporterPath}=7075:${kafkaYmlPath}"" >> kafka.service`
+    `echo 'Environment=${quotes}KAFKA_OPTS=-javaagent:${jmxExporterPath}=7075:${kafkaYmlPath}${quotes}' >> kafka.service`
   );
   cp.execSync(
     `echo "ExecStart=${kafkaServerStartPath} ${serverPropertiesPath}" >> kafka.service`
@@ -118,20 +80,23 @@ try {
   // CHECK FOR SYSTEMD
   const checkSystemDKafka = cp.execSync('find /etc/systemd/system -type f -iname "kafka.service"')
   const systemDPathString = checkSystemDKafka.toString();
-  const resolvedSystemDPath = pathResolver(systemDPathString);
-​
+  console.log(systemDPathString);
+  const resolvedSystemDPath = systemDPathString.replace(/\n/g,'');
+  console.log('returned ', resolvedSystemDPath);
   cp.execSync(`sudo rm ${resolvedSystemDPath}`);
   console.log('sucessfully removed original kafka.service file.');
   cp.execSync(`sudo cp kafka.service ${resolvedSystemDPath}`);
 
-  // //   // check if daemon reload and restart are both possible from this cwd
-  // //   console.log('new kafka.service file copied onto ~/systemd/system/. Beginning daemon-reload');
-  // //   cp.execSync('systemctl daemon-reload');
-  // //   cp.execSync('systemctl restart kafka');
-  // //   console.log('JMX Exporter has been installed and configured. You may now go to localhost:7075 to check metrics');
-  // // ​
-  //   // If it doesn't work then check for firewalls on that port
-  // ​
+  // check if daemon reload and restart are both possible from this cwd
+  console.log('new kafka.service file copied onto ~/systemd/system/. Beginning daemon-reload');
+  cp.execSync('systemctl daemon-reload');
+  cp.execSync('systemctl restart kafka');
+
+  cp.execSync('systemctl start kafka');
+  cp.execSync('systemctl start zookeeper');
+  console.log('JMX Exporter has been installed and configured. You may now go to localhost:7075 to check metrics');
+  console.log(`If localhost:7075 doesn't work, open up the firewall that port.`)
+
 } catch (err) {
   console.log('err', err);
 }
