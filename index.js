@@ -51,15 +51,15 @@ try {
 
   // Create directory and download JMX Exporter Agent
   const currentWorkDir = { cwd: '..' };
-  // cp.execSync(`mkdir JMXFOLDER`, currentWorkDir);
+  cp.execSync(`mkdir JMXFOLDER`, currentWorkDir);
   currentWorkDir.cwd = '../JMXFOLDER';
   cp.execSync(JMXInstallerWindows, currentWorkDir);
 
   // Find Kafka path and copy JMX Exporter file into libs dir
-  const kafkaServerDir = cp.execSync(
-    'find /Users/shahprose/Desktop -type d -iname "kafka_2.13-2.7.0-test*"'
-  );
-  // const kafkaServerDir = cp.execSync('find /home -type d -iname "kafka_2.13-2.7.0*"');
+  // const kafkaServerDir = cp.execSync(
+  //   'find /Users/shahprose/Desktop -type d -iname "kafka_2.13-2.7.0-test*"'
+  // );
+  const kafkaServerDir = cp.execSync('find /home -type d -iname "kafka_2.13-2.7.0*"');
   // const kafkaServerDir = cp.execSync('find /c/Users/ching/Desktop -type d -iname "kafka-server*"');
   const kafkaServerStr = kafkaServerDir.toString();
 
@@ -96,7 +96,6 @@ try {
   console.log('kafka-server-stop.sh path: ', kafkaServerStopPath);
 
   // IMPORTANT: Creating kafka.service file with correct paths
-  // Needs paths for: jmx exporter, yml file, kafka server start sh, server.properties
   cp.execSync(`echo "[Service]" > kafka.service`);
   cp.execSync(`echo "Type=simple" >> kafka.service`);
 
@@ -122,7 +121,6 @@ try {
   const systemDPathString = checkSystemDKafka.toString();
   const resolvedSystemDPath = pathResolver(systemDPathString);
 ​
-  // do that thing u learned before about finding the specific line inside a file with GREP
   cp.execSync(`sudo rm ${resolvedSystemDPath}`);
   console.log('sucessfully removed original kafka.service file.');
   cp.execSync(`sudo cp kafka.service ${resolvedSystemDPath}`);
