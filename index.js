@@ -53,6 +53,8 @@ const { start } = require('repl');
 ​
 try {​
   /**
+   * Ask user at the beginning if their systemd for kafka.service has already been created and configured
+   * 
    * - Need path to kafka-server-start.sh 
    *  - we get this later
    *  - 
@@ -102,9 +104,9 @@ try {​
 ​
 ​
 ​
-  // // Configure Exporter 
-  const kafkaConfigDir = `${returned}/config/`
-  const kafkaServerStart = `${returned}/bin/`
+  // Configure Exporter 
+  const kafkaConfigDir = `${returned}/config/`;
+  const kafkaServerStart = `${returned}/bin/`;
   cp.execSync(`cp kafka-2_0_0.yml ${kafkaConfigDir}`);
 
   // remove existing kafka-server-start.sh
@@ -114,10 +116,13 @@ try {​
   cp.execSync(`cp kafka-server-start.sh ${kafkaServerStart}`);
   console.log('NEW KAFKA-SERVER-START.SH FILE COPIED');
   
+​  // get server.properties path - Save for kafka.service config later
+  const serverPropertiesPath = `${kafkaConfigDir}server.properties`;
+​  const kafkaServerStartPath = `${kafkaServerStart}kafka-server-start.sh`;
 ​
-​
-​
-  // // CONFIGURE SYSTEMD
+
+
+  // CONFIGURE SYSTEMD
   const checkSystemDKafka = cp.execSync('find /etc/systemd/system -type f -iname "kafka.service"')
   const systemDPathString = checkSystemDKafka.toString();
   const resolvedSystemDPath = pathResolver(systemDPathString);
