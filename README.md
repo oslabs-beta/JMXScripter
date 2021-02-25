@@ -15,3 +15,6 @@ Script to download and configure JMX exporter onto your Kafka instance
 
 # But Most Importantly
 Remember to have fun.
+
+Also, it gets the JMX Exporter from here: https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/
+and the kafka-2_0_0.yml file from here: https://github.com/prometheus/jmx_exporter/tree/master/example_configs
