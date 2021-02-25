@@ -50,6 +50,7 @@ try {
   cp.execSync(`echo "Type=simple" >> kafka.service`);
 
   let quotes = '"';
+
   cp.execSync(
     `echo 'Environment=${quotes}JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64${quotes}' >> kafka.service`
   );
