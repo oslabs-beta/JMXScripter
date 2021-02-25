@@ -4,9 +4,9 @@
 This script automatically downloads and configures the JMX exporter for your Kafka instance. Please read the entire README before starting. 
 
 ## Getting Started
-1. Clone this repo
+- Clone this repo
 ````git clone https://github.com/Khyunwoo1/JMXScripter.git````
-2. Run the application in the root folder
+- Run the application in the root folder
 ````node index.js````
 
 ## Important Notes
