@@ -3,7 +3,7 @@ Script to download and configure JMX exporter onto your Kafka instance
 
 # Getting Started
 - Git clone this thing.
-- Type "node index.js" onto your terminal
+- Type "node index.js" onto your terminal.
 
 # Caveats
 - Works for Linux/Ubuntu and Mac OS. Sorry, Windows.
