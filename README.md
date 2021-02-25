@@ -19,5 +19,7 @@ This script automatically downloads and configures the JMX exporter for your Kaf
 
 ## Links
 This script was written as a companion for it's parent application here: https://github.com/oslabs-beta/klustr
+
 The JMX Exporter jar file is from here: https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/
+
 The kafka-2_0_0.yml file is from here: https://github.com/prometheus/jmx_exporter/tree/master/example_configs
