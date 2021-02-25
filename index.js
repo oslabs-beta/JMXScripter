@@ -39,12 +39,6 @@ try {
   const jmxExporterPath = `${kafkaLibsDir}JMXFILE.jar`;
   const kafkaYmlPath = `${kafkaConfigDir}kafka-2_0_0.yml`;
 
-  console.log('JMX Exporter path: ', jmxExporterPath);
-  console.log('kafka yml path: ', kafkaYmlPath);
-  console.log('server.properties path: ', serverPropertiesPath);
-  console.log('kafka-server-start.sh path: ', kafkaServerStartPath);
-  console.log('kafka-server-stop.sh path: ', kafkaServerStopPath);
-
   // IMPORTANT: Creating kafka.service file with correct paths
   cp.execSync(`echo "[Service]" > kafka.service`);
   cp.execSync(`echo "Type=simple" >> kafka.service`);
