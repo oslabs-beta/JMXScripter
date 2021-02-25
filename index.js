@@ -17,9 +17,7 @@ try {
   // Find Kafka path and copy JMX Exporter file into libs dir
   const kafkaServerDir = cp.execSync('find /home -type d -iname "kafka_2.13-2.7.0*"');
   const kafkaServerStr = kafkaServerDir.toString();
-
   const returned = kafkaServerStr.replace(/\n/g,'');
-  console.log('returned from path Resolver: ', returned);
   const kafkaLibsDir = `${returned}/libs/`;
   cp.execSync('cp JMXFILE.jar ' + kafkaLibsDir, currentWorkDir);
 
@@ -58,14 +56,11 @@ try {
   cp.execSync(`echo "ExecStop=${kafkaServerStopPath}" >> kafka.service`);
   cp.execSync(`echo "Restart=on-abnormal" >> kafka.service`);
 
-  
   // CONFIGURE SYSTEMD
   // CHECK FOR SYSTEMD
   const checkSystemDKafka = cp.execSync('find /etc/systemd/system -type f -iname "kafka.service"')
   const systemDPathString = checkSystemDKafka.toString();
-  console.log(systemDPathString);
   const resolvedSystemDPath = systemDPathString.replace(/\n/g,'');
-  console.log('returned ', resolvedSystemDPath);
   cp.execSync(`sudo rm ${resolvedSystemDPath}`);
   console.log('sucessfully removed original kafka.service file.');
   cp.execSync(`sudo cp kafka.service ${resolvedSystemDPath}`);
