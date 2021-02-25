@@ -45,5 +45,5 @@ exec $base_dir/kafka-run-class.sh $EXTRA_ARGS kafka.Kafka "$@"
 
 ### ADD THE LINE BELOW ###
 
-# export KAFKA_OPTS=' -javaagent:/usr/local/kafka-server/libs/jmx_prometheus_javaagent-0.13.0.jar=7071:/usr/local/kafka-server/config/sample_jmx_exporter.yml'
+export KAFKA_OPTS=' -javaagent:/usr/local/kafka-server/libs/jmx_prometheus_javaagent-0.13.0.jar=7071:/usr/local/kafka-server/config/sample_jmx_exporter.yml'
 
