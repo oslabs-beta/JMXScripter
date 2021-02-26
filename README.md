@@ -5,7 +5,7 @@ This script automatically downloads and configures the JMX exporter for your Kaf
 
 ## Getting Started
 - Clone this repo
-````git clone https://github.com/Khyunwoo1/JMXScripter.git````
+````git clone https://github.com/oslabs-beta/JMXScripter.git````
 - Run the application in the root folder
 ````node index.js````
 
