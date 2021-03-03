@@ -23,3 +23,6 @@ This script was written as a companion for it's parent application which you can
 The JMX Exporter .jar file is sourced from: https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/
 
 The kafka-2_0_0.yml file is sourced from: https://github.com/prometheus/jmx_exporter/tree/master/example_configs
+
+## Contact
+For any inquiries, feel free to contact https://github.com/Khyunwoo1. Cheers.
